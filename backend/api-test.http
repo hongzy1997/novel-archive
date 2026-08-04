@@ -1,0 +1,95 @@
+### 一覧取得
+GET http://localhost:8080/api/novels
+
+### 取得
+GET http://localhost:8080/api/novels/1
+
+### 登録（正常）
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "诡秘之主",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 1,
+  "rating": 5,
+  "memo": "已读"
+}
+
+### 登録（タイトル未入力）
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 1,
+  "rating": 5,
+  "memo": "已读"
+}
+
+### 登録（著者未入力）
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "诡秘之主",
+  "author": "",
+  "readingStatus": 1,
+  "rating": 5,
+  "memo": "已读"
+}
+
+### 登録（評価範囲外）
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "诡秘之主",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 1,
+  "rating": 11,
+  "memo": "已读"
+}
+
+### 更新（正常）
+PUT http://localhost:8080/api/novels/2
+Content-Type: application/json
+
+{
+  "title": "诡秘之主",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 2,
+  "rating": 5,
+  "memo": "已读，评价很高"
+}
+
+### 更新（タイトル未入力）
+PUT http://localhost:8080/api/novels/2
+Content-Type: application/json
+
+{
+  "title": "",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 2,
+  "rating": 5,
+  "memo": "已读，评价很高"
+}
+
+### 更新（評価範囲外）
+PUT http://localhost:8080/api/novels/2
+Content-Type: application/json
+
+{
+  "title": "诡秘之主",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 2,
+  "rating": 12,
+  "memo": "已读，评价很高"
+}
+
+### 削除
+DELETE http://localhost:8080/api/novels/9
+
+### 小説ID不存在
+GET http://localhost:8080/api/novels/9999

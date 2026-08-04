@@ -1,0 +1,11 @@
+SELECT
+    NOVEL_ID,
+    TITLE,
+    AUTHOR,
+    READING_STATUS,
+    RATING,
+    MEMO,
+    CREATED_AT,
+    UPDATED_AT
+FROM
+    NOVELS

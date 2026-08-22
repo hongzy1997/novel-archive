@@ -1,0 +1,504 @@
+/* =========================
+   全体
+   ========================= */
+
+#root {
+    min-height: 100vh;
+}
+
+body {
+    margin: 0;
+    background: #f5f6f8;
+    color: #222;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans JP",
+        sans-serif;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+
+/* =========================
+   ヘッダー
+   ========================= */
+
+.header {
+    display: grid;
+
+    /* 左右を同じ幅にしてタイトルを中央配置 */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+
+    max-width: 900px;
+    margin: 24px auto 0;
+    padding: 20px 24px;
+
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.header-title {
+    text-align: center;
+}
+
+.header-title h1 {
+    margin: 0;
+}
+
+.header-title p {
+    margin: 12px 0 0;
+    color: #666;
+}
+
+
+/* 言語切替 */
+
+.language-switcher {
+    justify-self: end;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    /* タイトルより少し下に配置 */
+    transform: translateY(20px);
+
+    font-size: 16px;
+}
+
+.language-switcher button {
+    padding: 0;
+
+    border: none;
+    background: none;
+
+    font-size: inherit;
+    cursor: pointer;
+}
+
+/* 選択中の言語 */
+.language-switcher button.active {
+    font-weight: bold;
+}
+
+
+/* =========================
+   メインコンテンツ
+   ========================= */
+
+.main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 36px 24px;
+}
+
+
+/* =========================
+   一覧画面ヘッダー
+   検索・タイトル・新規登録
+   ========================= */
+
+.list-header {
+    display: grid;
+
+    /* 検索 / タイトル / 新規登録 */
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 16px;
+
+    margin-bottom: 36px;
+}
+
+.list-header input {
+    justify-self: start;
+
+    width: 220px;
+    max-width: 100%;
+
+    box-sizing: border-box;
+    padding: 10px 14px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    font-size: 15px;
+}
+
+.list-header h2 {
+    justify-self: center;
+
+    margin: 0;
+
+    white-space: nowrap;
+    text-align: center;
+}
+
+.create-link {
+    justify-self: end;
+
+    padding: 8px 16px;
+
+    background: #222;
+    color: white;
+
+    text-decoration: none;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+.create-link:hover {
+    opacity: 0.8;
+}
+
+
+/* =========================
+   小説一覧
+   ========================= */
+
+.novel-list {
+    display: grid;
+    gap: 16px;
+
+    text-align: center;
+}
+
+
+/* 小説カード */
+
+.novel-card-link {
+    display: block;
+
+    color: inherit;
+    text-decoration: none;
+}
+
+.novel-card {
+    padding: 20px 24px;
+
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    /* カード内の内容を中央配置 */
+    text-align: center;
+
+    transition: 0.15s;
+    cursor: pointer;
+}
+
+.novel-card-link:hover .novel-card {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.novel-card h3 {
+    margin: 0 0 12px;
+    font-size: 20px;
+}
+
+.novel-card p {
+    margin: 6px 0;
+    color: #555;
+}
+
+
+/* =========================
+   評価（星）
+   ========================= */
+
+.star-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+
+    font-size: 18px;
+    line-height: 1;
+}
+
+
+/* クリック可能な星 */
+
+.star {
+    position: relative;
+
+    display: inline-block;
+
+    line-height: 1;
+    cursor: pointer;
+}
+
+.star-click-area {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+
+    width: 50%;
+    z-index: 2;
+}
+
+.star-click-area.left {
+    left: 0;
+}
+
+.star-click-area.right {
+    right: 0;
+}
+
+
+/* 半星表示 */
+
+.half-star {
+    /* filled-starを重ねるための基準位置 */
+    position: relative;
+    display: inline-block;
+}
+
+/* 下に表示する空星 */
+.empty-star {
+    display: inline-block;
+}
+
+/* 実星を空星の上に重ね、左半分だけ表示 */
+.filled-star {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 50%;
+    overflow: hidden;
+}
+
+
+/* =========================
+   小説詳細
+   ========================= */
+
+.detail-title {
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+.novel-detail {
+    padding: 28px 32px;
+
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    /* 詳細内容を中央配置 */
+    text-align: center;
+}
+
+.novel-detail h3 {
+    margin: 0 0 20px;
+    font-size: 24px;
+}
+
+.novel-detail p {
+    margin: 10px 0;
+    color: #555;
+}
+
+
+/* 詳細画面操作 */
+
+.detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+
+    margin-top: 20px;
+}
+
+.detail-actions a,
+.detail-actions button {
+    box-sizing: border-box;
+    padding: 8px 16px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    background: white;
+    color: #222;
+
+    font-size: 15px;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.detail-actions a:hover,
+.detail-actions button:hover {
+    background: #f0f0f0;
+}
+
+
+/* =========================
+   小説登録・更新フォーム
+   ========================= */
+
+.form-title {
+    margin: 0 0 24px;
+    text-align: center;
+}
+
+.novel-form {
+    display: grid;
+
+    padding: 28px 32px;
+
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+
+    /* フォーム内容を中央配置 */
+    text-align: center;
+}
+
+
+/* 各入力項目 */
+
+.novel-form label {
+    display: grid;
+    gap: 8px;
+
+    font-size: 18px;
+    font-weight: bold;
+}
+
+/* 入力項目ごとに余白と区切り線を設定 */
+.form-field {
+    margin: 0 0 20px;
+    padding: 0 0 20px;
+
+    border-bottom: 1px solid #eee;
+}
+
+/* 最後の入力項目には区切り線を表示しない */
+.form-field-last {
+    margin-bottom: 0;
+    padding-bottom: 0;
+
+    border-bottom: none;
+}
+
+
+/* 入力コントロール */
+
+.novel-form input,
+.novel-form select,
+.novel-form textarea {
+    box-sizing: border-box;
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    font: inherit;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.novel-form select {
+    text-align: center;
+}
+
+.novel-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+
+/* フォーム内評価 */
+
+.novel-form .star-rating {
+    justify-self: center;
+
+    font-size: 24px;
+}
+
+.rating-help {
+    margin-left: 6px;
+
+    color: #888;
+
+    font-size: 14px;
+    font-weight: normal;
+
+    cursor: help;
+}
+
+
+/* バリデーションエラー */
+
+.form-error {
+    color: #c00;
+
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.submit-error {
+    margin: 16px 0 8px;
+
+    color: #c00;
+
+    text-align: right;
+    font-size: 14px;
+}
+
+
+/* =========================
+   フォーム操作
+   ========================= */
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-top: 8px;
+}
+
+.form-actions a,
+.form-actions button {
+    padding: 8px 16px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+
+    background: white;
+    color: #222;
+
+    font-size: 15px;
+    text-decoration: none;
+
+    cursor: pointer;
+}
+
+.form-actions a:hover,
+.form-actions button:hover {
+    background: #f0f0f0;
+}
+
+
+/* =========================
+   フッター
+   ========================= */
+
+.footer {
+    padding: 24px;
+
+    color: #888;
+    text-align: center;
+}

@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.hongzy.novelarchive.dto.NovelCreateRequest;
+import com.hongzy.novelarchive.dto.NovelRequest;
 import com.hongzy.novelarchive.dto.NovelResponse;
 import com.hongzy.novelarchive.exception.NovelNotFoundException;
 import com.hongzy.novelarchive.service.NovelService;
@@ -68,7 +68,7 @@ class NovelControllerTest {
     void shouldCreateNovel() throws Exception {
 
         // Arrange
-        NovelCreateRequest request = new NovelCreateRequest();
+        NovelRequest request = new NovelRequest();
         request.setTitle("诡秘之主");
         request.setAuthor("爱潜水的乌贼");
         request.setReadingStatus(2);
@@ -83,7 +83,7 @@ class NovelControllerTest {
         response.setRating(8);
         response.setMemo("很好看");
 
-        when(novelService.create(any(NovelCreateRequest.class)))
+        when(novelService.create(any(NovelRequest.class)))
                 .thenReturn(response);
 
         // Act & Assert
@@ -100,14 +100,14 @@ class NovelControllerTest {
                 .andExpect(jsonPath("$.rating").value(8))
                 .andExpect(jsonPath("$.memo").value("很好看"));
 
-        verify(novelService).create(any(NovelCreateRequest.class));
+        verify(novelService).create(any(NovelRequest.class));
     }
 
     @Test
     void shouldReturn400WhenTitleIsBlank() throws Exception {
 
         // Arrange
-        NovelCreateRequest request = new NovelCreateRequest();
+        NovelRequest request = new NovelRequest();
         request.setTitle(""); // 故意错误
         request.setAuthor("乌贼");
         request.setReadingStatus(2);
@@ -127,7 +127,7 @@ class NovelControllerTest {
 
         // Arrange
         when(novelService.findById(1L))
-                .thenThrow(new NovelNotFoundException("小说不存在"));
+                .thenThrow(new NovelNotFoundException(1L));
 
         // Act & Assert
         mockMvc.perform(get("/api/novels/1"))

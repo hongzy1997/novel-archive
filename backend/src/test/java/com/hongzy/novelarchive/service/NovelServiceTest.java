@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.hongzy.novelarchive.dao.NovelDao;
-import com.hongzy.novelarchive.dto.NovelCreateRequest;
+import com.hongzy.novelarchive.dto.NovelRequest;
 import com.hongzy.novelarchive.dto.NovelResponse;
 import com.hongzy.novelarchive.entity.Novel;
 import com.hongzy.novelarchive.exception.NovelNotFoundException;
@@ -75,7 +75,7 @@ class NovelServiceTest {
     void shouldCreateNovel() {
 
         // Arrange
-        NovelCreateRequest request = new NovelCreateRequest();
+        NovelRequest request = new NovelRequest();
         request.setTitle("诡秘之主");
         request.setAuthor("爱潜水的乌贼");
         request.setReadingStatus(1);

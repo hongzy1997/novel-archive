@@ -34,9 +34,6 @@ out/
 /nbdist/
 /.nb-gradle/
 
-### VS Code ###
-.vscode/
-
 ### Logs ###
 logs/
 
@@ -44,4 +41,5 @@ logs/
 .DS_Store
 Thumbs.db
 
-src/main/resources/application-local.yml
+# Local environment configuration
+/src/main/resources/application-local.yml

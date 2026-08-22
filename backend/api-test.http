@@ -1,95 +1,357 @@
-### 一覧取得
+### ============================================================
+### Novel Archive API Test
+### 前提：
+###   ・既存データ：53件
+###   ・NOVEL_ID=31：「诡秘之主」
+###   ・次回採番ID：54
+### ============================================================
+
+
+### ============================================================
+### 1. 一覧・詳細取得
+### ============================================================
+
+### 一覧取得（正常）
 GET http://localhost:8080/api/novels
 
-### 取得
-GET http://localhost:8080/api/novels/1
 
-### 登録（正常）
+### 詳細取得（正常）
+GET http://localhost:8080/api/novels/31
+
+
+### 詳細取得（異常：存在しないID）
+GET http://localhost:8080/api/novels/9999
+
+
+### ============================================================
+### 2. 登録
+### ============================================================
+
+### 登録（正常：読了・評価あり）
+### → NOVEL_ID=54 を想定
 POST http://localhost:8080/api/novels
 Content-Type: application/json
 
 {
-  "title": "诡秘之主",
-  "author": "爱潜水的乌贼",
-  "readingStatus": 1,
-  "rating": 5,
-  "memo": "已读"
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 2,
+  "rating": 10,
+  "memo": "登録テスト"
 }
 
-### 登録（タイトル未入力）
+
+### 登録（正常：未読・評価なし）
+### → NOVEL_ID=55 を想定
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説2",
+  "author": "",
+  "readingStatus": 0,
+  "rating": null,
+  "memo": ""
+}
+
+
+### 登録（正常：作者未入力）
+### → NOVEL_ID=56 を想定
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説3",
+  "author": "",
+  "readingStatus": 2,
+  "rating": 8,
+  "memo": "作者なしテスト"
+}
+
+
+### 登録（異常：タイトル未入力）
+### → 400 Bad Request
 POST http://localhost:8080/api/novels
 Content-Type: application/json
 
 {
   "title": "",
-  "author": "爱潜水的乌贼",
-  "readingStatus": 1,
-  "rating": 5,
-  "memo": "已读"
+  "author": "テスト作者",
+  "readingStatus": 2,
+  "rating": 8,
+  "memo": ""
 }
 
-### 登録（著者未入力）
+
+### 登録（異常：読書状態未入力）
+### → 400 Bad Request
 POST http://localhost:8080/api/novels
 Content-Type: application/json
 
 {
-  "title": "诡秘之主",
-  "author": "",
-  "readingStatus": 1,
-  "rating": 5,
-  "memo": "已读"
+  "title": "API異常テスト1",
+  "author": "テスト作者",
+  "readingStatus": null,
+  "rating": 8,
+  "memo": ""
 }
 
-### 登録（評価範囲外）
+
+### 登録（異常：読書状態範囲外）
+### → 400 Bad Request
 POST http://localhost:8080/api/novels
 Content-Type: application/json
 
 {
-  "title": "诡秘之主",
-  "author": "爱潜水的乌贼",
-  "readingStatus": 1,
+  "title": "API異常テスト2",
+  "author": "テスト作者",
+  "readingStatus": 4,
+  "rating": 8,
+  "memo": ""
+}
+
+
+### 登録（異常：評価範囲外）
+### → 400 Bad Request
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "API異常テスト3",
+  "author": "テスト作者",
+  "readingStatus": 2,
   "rating": 11,
-  "memo": "已读"
+  "memo": ""
 }
+
+
+### 登録（異常：未読なのに評価あり）
+### → 400 Bad Request
+### → rating にValidRatingのエラーが設定されること
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "API異常テスト4",
+  "author": "テスト作者",
+  "readingStatus": 0,
+  "rating": 8,
+  "memo": ""
+}
+
+
+### 登録（異常：未読以外なのに評価なし）
+### → 400 Bad Request
+### → rating にValidRatingのエラーが設定されること
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "API異常テスト5",
+  "author": "テスト作者",
+  "readingStatus": 2,
+  "rating": null,
+  "memo": ""
+}
+
+
+### 登録（異常：タイトル重複）
+### → 409 Conflict
+### → NOVEL_ID=31「诡秘之主」が既に存在
+POST http://localhost:8080/api/novels
+Content-Type: application/json
+
+{
+  "title": "诡秘之主",
+  "author": "爱潜水的乌贼",
+  "readingStatus": 2,
+  "rating": 10,
+  "memo": "タイトル重複テスト"
+}
+
+
+### ============================================================
+### 3. 更新
+### 登録テストで作成した NOVEL_ID=54 を使用
+### ============================================================
 
 ### 更新（正常）
-PUT http://localhost:8080/api/novels/2
+PUT http://localhost:8080/api/novels/54
 Content-Type: application/json
 
 {
-  "title": "诡秘之主",
-  "author": "爱潜水的乌贼",
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
   "readingStatus": 2,
-  "rating": 5,
-  "memo": "已读，评价很高"
+  "rating": 9,
+  "memo": "更新テスト"
 }
 
-### 更新（タイトル未入力）
-PUT http://localhost:8080/api/novels/2
+
+### 更新（正常：自分自身と同じタイトル）
+### → タイトル重複エラーにならないこと
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 1,
+  "rating": 8,
+  "memo": "同一タイトル更新テスト"
+}
+
+
+### 更新（正常：未読へ変更）
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 0,
+  "rating": null,
+  "memo": "未読へ変更"
+}
+
+
+### 更新（異常：タイトル未入力）
+### → 400 Bad Request
+PUT http://localhost:8080/api/novels/54
 Content-Type: application/json
 
 {
   "title": "",
-  "author": "爱潜水的乌贼",
+  "author": "テスト作者1",
   "readingStatus": 2,
-  "rating": 5,
-  "memo": "已读，评价很高"
+  "rating": 8,
+  "memo": ""
 }
 
-### 更新（評価範囲外）
-PUT http://localhost:8080/api/novels/2
+
+### 更新（異常：読書状態未入力）
+### → 400 Bad Request
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": null,
+  "rating": 8,
+  "memo": ""
+}
+
+
+### 更新（異常：読書状態範囲外）
+### → 400 Bad Request
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 4,
+  "rating": 8,
+  "memo": ""
+}
+
+
+### 更新（異常：評価範囲外）
+### → 400 Bad Request
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 2,
+  "rating": 11,
+  "memo": ""
+}
+
+
+### 更新（異常：未読なのに評価あり）
+### → 400 Bad Request
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 0,
+  "rating": 8,
+  "memo": ""
+}
+
+
+### 更新（異常：未読以外なのに評価なし）
+### → 400 Bad Request
+PUT http://localhost:8080/api/novels/54
+Content-Type: application/json
+
+{
+  "title": "APIテスト小説1",
+  "author": "テスト作者1",
+  "readingStatus": 2,
+  "rating": null,
+  "memo": ""
+}
+
+
+### 更新（異常：他の小説とタイトル重複）
+### → 409 Conflict
+### → NOVEL_ID=31「诡秘之主」と重複
+PUT http://localhost:8080/api/novels/54
 Content-Type: application/json
 
 {
   "title": "诡秘之主",
-  "author": "爱潜水的乌贼",
+  "author": "テスト作者1",
   "readingStatus": 2,
-  "rating": 12,
-  "memo": "已读，评价很高"
+  "rating": 8,
+  "memo": "タイトル重複テスト"
 }
 
-### 削除
-DELETE http://localhost:8080/api/novels/9
 
-### 小説ID不存在
-GET http://localhost:8080/api/novels/9999
+### 更新（異常：存在しないID）
+### → 404 Not Found
+PUT http://localhost:8080/api/novels/9999
+Content-Type: application/json
+
+{
+  "title": "存在しない小説",
+  "author": "テスト作者",
+  "readingStatus": 2,
+  "rating": 8,
+  "memo": ""
+}
+
+
+### ============================================================
+### 4. 更新日時確認
+### ============================================================
+
+### 更新後データ取得
+### → UPDATED_ATをAPIでは返していないため、
+###   DB上でUPDATED_ATが更新されていることを確認
+GET http://localhost:8080/api/novels/54
+
+
+### ============================================================
+### 5. 削除
+### ※ 最後に実行
+### ============================================================
+
+### 削除（正常）
+DELETE http://localhost:8080/api/novels/54
+
+
+### 削除後取得（異常）
+### → 404 Not Found
+GET http://localhost:8080/api/novels/54
+
+
+### 削除（異常：存在しないID）
+### → 404 Not Found
+DELETE http://localhost:8080/api/novels/9999

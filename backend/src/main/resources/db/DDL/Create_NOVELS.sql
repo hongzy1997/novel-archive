@@ -1,11 +1,11 @@
 -- ============================================================
 -- Novel Archive
--- Version     : 1.0
--- File        : V1_0__Create_NOVELS.sql
--- Description : NOVELSテーブルおよび採番用シーケンスの作成
+-- Version     : v0
+-- File        : Create_NOVELS.sql
+-- Description : NOVELSテーブル、採番用シーケンスおよび更新日時トリガーの作成
 -- ============================================================
 
-CREATE SEQUENCE SEQ_NOVELS
+CREATE SEQUENCE NOVEL_SEQ
     START WITH 1
     INCREMENT BY 1
     MINVALUE 1
@@ -27,12 +27,27 @@ CREATE TABLE NOVELS (
     CONSTRAINT PK_NOVELS
         PRIMARY KEY (NOVEL_ID),
 
+    CONSTRAINT UK_NOVELS_TITLE
+        UNIQUE (TITLE),
+
     CONSTRAINT CK_NOVELS_READING_STATUS
         CHECK (READING_STATUS IN (0, 1, 2, 3)),
 
     CONSTRAINT CK_NOVELS_RATING
-        CHECK (RATING BETWEEN 1 AND 10)
+        CHECK (
+            (READING_STATUS = 0 AND RATING IS NULL)
+            OR
+            (READING_STATUS IN (1, 2, 3) AND RATING BETWEEN 1 AND 10)
+        )
 );
+
+
+CREATE OR REPLACE TRIGGER TRG_NOVELS_UPDATED_AT
+BEFORE UPDATE ON NOVELS
+FOR EACH ROW
+BEGIN
+    :NEW.UPDATED_AT := CURRENT_TIMESTAMP;
+END;
 
 
 COMMENT ON TABLE NOVELS IS
@@ -51,7 +66,7 @@ COMMENT ON COLUMN NOVELS.READING_STATUS IS
     '読書状態（0:未読、1:読書中、2:読了、3:中断）';
 
 COMMENT ON COLUMN NOVELS.RATING IS
-    '評価（1～10）';
+    '評価（1～10、未読の場合はNULL）';
 
 COMMENT ON COLUMN NOVELS.MEMO IS
     'メモ';

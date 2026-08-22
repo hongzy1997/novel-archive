@@ -3,3 +3,6 @@ docs/
 
 # Obsidian
 .obsidian/
+
+# VS Code
+.vscode/

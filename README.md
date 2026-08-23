@@ -1,22 +1,16 @@
-# Novel Archive（V0）
+# Novel Archive
 
-Novel Archive は、読んだ小説の情報を管理するための個人開発プロジェクトです。
+Novel Archive は、小説に関する情報や読書記録を管理するための
+個人向けWebアプリケーションです。
 
-React、Spring Boot、Oracle Database、Dockerを利用したWebアプリケーションを構築し、
-要件定義・設計・実装・テスト・実行環境構築までの一連の開発工程を
-学習・実践することを目的としています。
+読んだ作品や読みたい作品を記録し、
+読書状態、評価、メモなどの情報を整理・蓄積することで、
+自身の読書履歴を継続的に管理・参照できることを目的としています。
 
----
-
-# システム概要
-
-登録した小説について、以下の操作を行うWebアプリケーションです。
-
-- 小説一覧表示
-- 小説詳細表示
-- 小説登録
-- 小説更新
-- 小説削除
+また、Webアプリケーション開発における
+要件定義、設計、実装、テスト、実行環境構築までの
+一連の開発工程を実践する個人開発プロジェクトとして、
+継続的に機能追加・改善を行います。
 
 ---
 
@@ -26,42 +20,38 @@ React、Spring Boot、Oracle Database、Dockerを利用したWebアプリケー�
 Browser
     │
     ▼
-React
-    │ REST API
+Frontend
+React + nginx
+    │
+    │ /api
     ▼
+Backend
 Spring Boot
     │
     ▼
 Oracle Database
 ```
 
----
+Frontend、Backend、Oracle Databaseは、
+Docker Composeを利用して実行します。
 
-# V0の開発目標
-
-- CRUD機能の実装
-- ReactとSpring Bootの連携
-- Oracle Databaseへのデータ保存・取得
-- Dockerによる実行環境の構築
-- 他のPCからアクセスできる環境の構築
-- Gitを利用したバージョン管理
-- 設計・実装・テストを含む開発工程の実践
 
 ---
 
 # 使用技術
 
-| 分類           | 内容                      |
-| -------------- | ------------------------- |
-| フロントエンド | React                     |
-| バックエンド   | Spring Boot 4.1.0         |
-| 言語           | Java 21                   |
-| データベース   | Oracle Database 26ai Free |
-| データアクセス | Doma                      |
-| ビルド         | Gradle Kotlin DSL         |
-| コンテナ       | Docker Desktop            |
-| バージョン管理 | Git / GitHub              |
-| 開発環境       | Visual Studio Code        |
+| 分類 | 内容 |
+| --- | --- |
+| フロントエンド | React |
+| Webサーバー | nginx |
+| バックエンド | Spring Boot |
+| 言語 | Java |
+| データベース | Oracle Database |
+| データアクセス | Doma |
+| ビルド | Gradle Kotlin DSL |
+| 実行環境 | Docker / Docker Compose |
+| バージョン管理 | Git / GitHub |
+
 
 ---
 
@@ -73,45 +63,61 @@ novel-archive
 │   └── Spring Bootアプリケーション
 ├── frontend
 │   └── Reactアプリケーション
+├── docker
+│   └── Oracle Database初期化スクリプト
+├── docs
+│   └── 設計資料
+├── compose.yml
+├── .env.example
 ├── README.md
 └── CHANGELOG.md
 ```
 
-設計資料はローカル環境の `docs/v0` 配下で管理しています。
+設計資料は `docs` 配下で管理しています。
+
 
 ---
 
-# 開発工程
+# 実行方法
 
-```text
-要件定義
-    ↓
-システム設計
-    ↓
-DB設計
-    ↓
-API設計
-    ↓
-実装設計
-    ↓
-テスト設計
-    ↓
-実装・テスト
-    ↓
-実行環境構築
+## 1. 環境変数ファイルの作成
+
+`.env.example` をコピーして `.env` を作成します。
+
+```powershell
+copy .env.example .env
 ```
 
----
+`.env` にローカル環境で使用するパスワードを設定します。
 
-# 開発状況
 
-現在、Spring Boot、Oracle Database、Domaを利用した
-バックエンドのCRUD機能まで実装済みです。
+## 2. アプリケーションの起動
 
-今後、V0の完成に向けて以下を実施します。
+```powershell
+docker compose up -d --build
+```
 
-- Reactの基本学習
-- CRUD画面の実装
-- ReactとSpring Bootの連携
-- Dockerによる実行環境の構築
-- 他のPCからのアクセス確認
+Docker Composeにより、以下の環境が起動します。
+
+- Frontend
+- Backend
+- Oracle Database
+
+
+## 3. アプリケーションへのアクセス
+
+ブラウザから以下へアクセスします。
+
+```text
+http://localhost:5173
+```
+
+
+## 4. アプリケーションの停止
+
+```powershell
+docker compose down
+```
+
+Oracle DatabaseのデータはDocker Volumeに保存されるため、
+通常の停止・再起動では保持されます。

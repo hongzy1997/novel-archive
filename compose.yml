@@ -1,0 +1,98 @@
+# ============================================================
+# Novel Archive
+# Docker Compose
+# Frontend / Backend / Oracle Database を一括管理する
+# ============================================================
+
+services:
+
+  # ==========================================================
+  # Oracle Database
+  # ==========================================================
+  oracle:
+    image: container-registry.oracle.com/database/free:latest
+
+    container_name: novel-oracle
+
+    environment:
+      # Oracle管理者パスワード
+      ORACLE_PWD: ${ORACLE_PASSWORD}
+
+      # Novel Archive用DBユーザー
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+
+      # SQL*Plusで日本語・中国語を正しく扱うための文字コード設定
+      NLS_LANG: AMERICAN_AMERICA.AL32UTF8
+
+    volumes:
+      # Oracleデータを永続化
+      - oracle-data:/opt/oracle/oradata
+
+      # Oracle起動時に実行する初期化スクリプト
+      - ./docker/oracle/startup:/opt/oracle/scripts/startup
+
+      # DB定義ファイル
+      - ./backend/src/main/resources/db/DDL/Create_NOVELS.sql:/opt/oracle/scripts/app/Create_NOVELS.sql:ro
+      - ./backend/src/main/resources/db/DDL/Create_TRG_NOVELS_UPDATED_AT.sql:/opt/oracle/scripts/app/Create_TRG_NOVELS_UPDATED_AT.sql:ro
+
+      # 初期データ
+      - ./backend/src/main/resources/db/DML/Insert_Sample_Data.sql:/opt/oracle/scripts/app/Insert_Sample_Data.sql:ro
+
+    # Oracle Databaseが利用可能になったことを確認
+    healthcheck:
+      test: [ "CMD-SHELL", "echo 'SELECT 1 FROM DUAL;' | sqlplus -s ${DB_USERNAME}/${DB_PASSWORD}@//localhost:1521/FREEPDB1 > /dev/null || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 60s
+
+  # ==========================================================
+  # Backend
+  # Spring Boot REST API
+  # ==========================================================
+  backend:
+    build:
+      context: ./backend
+
+    container_name: novel-backend
+
+    ports:
+      # ホスト8080 → Backendコンテナ8080
+      - "8080:8080"
+
+    environment:
+      # Docker Network内ではservice名「oracle」で接続できる
+      SPRING_DATASOURCE_URL: jdbc:oracle:thin:@//oracle:1521/FREEPDB1
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+
+    depends_on:
+      oracle:
+        condition: service_healthy
+
+  # ==========================================================
+  # Frontend
+  # ReactをBuildし、nginxから配信する
+  # ==========================================================
+  frontend:
+    build:
+      context: ./frontend
+
+    container_name: novel-frontend
+
+    ports:
+      # ホスト5173 → nginxコンテナ80
+      - "5173:80"
+
+    depends_on:
+      - backend
+
+# ============================================================
+# Volumes
+# ============================================================
+
+volumes:
+
+  # Oracle Database永続化用
+  oracle-data:

@@ -36,7 +36,7 @@ function NovelEditPage({ language }) {
     async function loadNovel() {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/novels/${novelId}`
+          `/api/novels/${novelId}`
         )
 
         if (!response.ok) {
@@ -95,7 +95,7 @@ function NovelEditPage({ language }) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/api/novels/${novelId}`,
+        `/api/novels/${novelId}`,
         {
           method: 'PUT',
           headers: {

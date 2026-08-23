@@ -35,7 +35,7 @@ function NovelListPage({ language }) {
     async function loadNovels() {
       try {
         const response = await fetch(
-          'http://localhost:8080/api/novels'
+          '/api/novels'
         )
 
         if (!response.ok) {

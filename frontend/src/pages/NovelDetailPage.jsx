@@ -25,7 +25,7 @@ function NovelDetailPage({ language }) {
     async function loadNovel() {
       try {
         const response = await fetch(
-          `http://localhost:8080/api/novels/${novelId}`
+          `/api/novels/${novelId}`
         )
 
         if (response.status === 404) {
@@ -66,7 +66,7 @@ function NovelDetailPage({ language }) {
       setDeleteError(false)
 
       const response = await fetch(
-        `http://localhost:8080/api/novels/${novelId}`,
+        `/api/novels/${novelId}`,
         {
           method: 'DELETE',
         }

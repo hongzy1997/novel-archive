@@ -2,7 +2,7 @@
 -- Novel Archive
 -- Version     : v0
 -- File        : Create_NOVELS.sql
--- Description : NOVELSテーブル、採番用シーケンスおよび更新日時トリガーの作成
+-- Description : NOVELSテーブルおよび採番用シーケンスの作成
 -- ============================================================
 
 CREATE SEQUENCE NOVEL_SEQ
@@ -40,14 +40,6 @@ CREATE TABLE NOVELS (
             (READING_STATUS IN (1, 2, 3) AND RATING BETWEEN 1 AND 10)
         )
 );
-
-
-CREATE OR REPLACE TRIGGER TRG_NOVELS_UPDATED_AT
-BEFORE UPDATE ON NOVELS
-FOR EACH ROW
-BEGIN
-    :NEW.UPDATED_AT := CURRENT_TIMESTAMP;
-END;
 
 
 COMMENT ON TABLE NOVELS IS

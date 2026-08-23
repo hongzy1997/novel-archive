@@ -67,7 +67,7 @@ function NovelCreatePage({ language }) {
 
     try {
       const response = await fetch(
-        'http://localhost:8080/api/novels',
+        '/api/novels',
         {
           method: 'POST',
           headers: {

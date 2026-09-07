@@ -1,123 +1,156 @@
 # Novel Archive
 
-Novel Archive は、小説に関する情報や読書記録を管理するための
-個人向けWebアプリケーションです。
+Novel Archiveは、読んだ小説や気になる小説を管理するための個人向けWebアプリケーションです。
 
-読んだ作品や読みたい作品を記録し、
-読書状態、評価、メモなどの情報を整理・蓄積することで、
-自身の読書履歴を継続的に管理・参照できることを目的としています。
+小説の読書状態、評価、メモなどを記録し、一覧・詳細画面から継続的に管理できます。
+また、個人開発を通してFrontend、Backend、Database、Dockerを利用したWebアプリケーション開発を学習することを目的としています。
 
-また、Webアプリケーション開発における
-要件定義、設計、実装、テスト、実行環境構築までの
-一連の開発工程を実践する個人開発プロジェクトとして、
-継続的に機能追加・改善を行います。
+**Current Version: V0**
 
----
+## 主な機能
 
-# システム構成
+- 小説一覧表示
+- タイトル検索
+- 小説詳細表示
+- 小説登録
+- 小説編集
+- 小説削除
+- 読書状態管理
+- 1～10の評価管理
+- 日本語・中国語の表示切替
+
+## システム構成
 
 ```text
 Browser
-    │
-    ▼
+   │
+   ▼
 Frontend
 React + nginx
-    │
-    │ /api
-    ▼
+   │
+   │ REST API
+   ▼
 Backend
 Spring Boot
-    │
-    ▼
-Oracle Database
+   │
+   │ Doma
+   ▼
+Database
+Oracle Database 26ai Free
 ```
 
-Frontend、Backend、Oracle Databaseは、
-Docker Composeを利用して実行します。
+Frontend、Backend、Oracle DatabaseはDocker Composeで実行します。
 
+## 使用技術
 
----
+| 分類            | 技術                        |
+| --------------- | --------------------------- |
+| Frontend        | React / Vite                |
+| Web Server      | nginx                       |
+| Backend         | Java 21 / Spring Boot 4.1.1 |
+| Database Access | Doma                        |
+| Database        | Oracle Database 26ai Free   |
+| Build           | Gradle Kotlin DSL           |
+| Infrastructure  | Docker / Docker Compose     |
+| Version Control | Git / GitHub                |
 
-# 使用技術
-
-| 分類 | 内容 |
-| --- | --- |
-| フロントエンド | React |
-| Webサーバー | nginx |
-| バックエンド | Spring Boot |
-| 言語 | Java |
-| データベース | Oracle Database |
-| データアクセス | Doma |
-| ビルド | Gradle Kotlin DSL |
-| 実行環境 | Docker / Docker Compose |
-| バージョン管理 | Git / GitHub |
-
-
----
-
-# ディレクトリ構成
+## ディレクトリ構成
 
 ```text
-novel-archive
-├── backend
-│   └── Spring Bootアプリケーション
-├── frontend
-│   └── Reactアプリケーション
-├── docker
-│   └── Oracle Database初期化スクリプト
-├── docs
-│   └── 設計資料
-├── compose.yml
-├── .env.example
-├── README.md
-└── CHANGELOG.md
+novel-archive/
+├─ backend/
+│  └─ Spring Bootアプリケーション
+├─ frontend/
+│  └─ Reactアプリケーション
+├─ docker/
+│  └─ Oracle Database初期化スクリプト
+├─ docs/
+│  └─ バージョン別設計資料
+├─ compose.yml
+├─ .env.example
+├─ README.md
+└─ CHANGELOG.md
 ```
 
-設計資料は `docs` 配下で管理しています。
+V0の設計資料は`docs/v0/`配下で管理しています。
 
+## 実行方法
 
----
+### 1. 前提
 
-# 実行方法
+以下を利用できる環境を用意します。
 
-## 1. 環境変数ファイルの作成
+- Git
+- Docker Desktop
 
-`.env.example` をコピーして `.env` を作成します。
+### 2. Repository取得
+
+```bash
+git clone https://github.com/hongzy1997/novel-archive.git
+cd novel-archive
+```
+
+### 3. 環境変数ファイル作成
+
+`.env.example`をコピーして`.env`を作成します。
+
+Windows:
 
 ```powershell
 copy .env.example .env
 ```
 
-`.env` にローカル環境で使用するパスワードを設定します。
+macOS / Linux:
 
+```bash
+cp .env.example .env
+```
 
-## 2. アプリケーションの起動
+作成した`.env`にローカル環境で使用するパスワードを設定します。
 
-```powershell
+### 4. 起動
+
+```bash
 docker compose up -d --build
 ```
 
-Docker Composeにより、以下の環境が起動します。
+初回起動時はOracle DatabaseのApplication用ユーザー、DBオブジェクト、Sample Dataを自動作成します。
 
-- Frontend
-- Backend
-- Oracle Database
-
-
-## 3. アプリケーションへのアクセス
-
-ブラウザから以下へアクセスします。
+### 5. アクセス
 
 ```text
 http://localhost:5173
 ```
 
+Frontendのnginxが`/api/*`をBackendへReverse Proxyします。
 
-## 4. アプリケーションの停止
+### 6. 停止
 
-```powershell
+```bash
 docker compose down
 ```
 
-Oracle DatabaseのデータはDocker Volumeに保存されるため、
-通常の停止・再起動では保持されます。
+Oracle DatabaseのデータはDocker Volumeに保存されるため、通常の停止・再起動では保持されます。
+
+Databaseを含めて初期化する場合はVolumeを削除します。
+
+```bash
+docker compose down -v
+```
+
+## ドキュメント
+
+設計資料はVersionごとに管理します。
+
+```text
+docs/
+└─ v0/
+   ├─ 00_プロジェクト概要
+   ├─ 01_要件定義
+   ├─ 02_基本設計
+   ├─ 03_詳細設計
+   ├─ 04_DB設計
+   └─ 05_インフラ・実行環境
+```
+
+変更履歴は`CHANGELOG.md`で管理します。
